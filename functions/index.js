@@ -1,7 +1,13 @@
 const functions = require('@google-cloud/functions-framework');
 
 const TO = (process.env.TO_ADDRS || '').split(',').map(s => s.trim()).filter(Boolean);
-const FROM = process.env.FROM_ADDR || 'Built by Nair <inquiries@mail.teeboxmarket.com>';
+// FROM_ADDR is "Display Name <someone@domain.com>" or a bare address.
+const SENDER = (function () {
+  const raw = (process.env.FROM_ADDR || 'Built by Nair <inquiries@builtbynair.com>').trim();
+  const m = raw.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+  return m ? { name: m[1] || 'Built by Nair', email: m[2].trim() }
+           : { name: 'Built by Nair', email: raw };
+})();
 const ALLOWED = new Set(['https://builtbynair.com', 'https://www.builtbynair.com']);
 
 // Per-instance throttle. Not a hard guarantee across instances, but enough to
@@ -50,9 +56,9 @@ functions.http('inquiry', async (req, res) => {
   const ip = (req.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown';
   if (rateLimited(ip)) return res.status(429).json({ ok: false, error: 'rate' });
 
-  const key = process.env.RESEND_API_KEY;
-  if (!key || !TO.length) {
-    console.error('misconfigured: key=' + !!key + ' to=' + TO.length);
+  const key = process.env.BREVO_API_KEY;
+  if (!key || key === 'UNSET' || !TO.length) {
+    console.error('misconfigured: key=' + (key ? (key === 'UNSET' ? 'UNSET' : 'set') : 'missing') + ' to=' + TO.length);
     return res.status(500).json({ ok: false, error: 'config' });
   }
 
@@ -85,17 +91,24 @@ functions.http('inquiry', async (req, res) => {
   // others, and this gives us per-recipient delivery status in the Resend log.
   async function sendOne(addr) {
     try {
-      const r = await fetch('https://api.resend.com/emails', {
+      const r = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
-        headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: FROM, to: [addr], reply_to: email, subject, text, html })
+        headers: { 'api-key': key, 'content-type': 'application/json', accept: 'application/json' },
+        body: JSON.stringify({
+          sender: SENDER,
+          to: [{ email: addr }],
+          replyTo: { email: email, name: name },
+          subject: subject,
+          textContent: text,
+          htmlContent: html
+        })
       });
       if (!r.ok) {
-        console.error('resend ' + r.status + ' to=' + addr + ' ' + (await r.text()));
+        console.error('brevo ' + r.status + ' to=' + addr + ' ' + (await r.text()));
         return false;
       }
       const j = await r.json();
-      console.log('sent id=' + j.id + ' to=' + addr + ' ip=' + ip);
+      console.log('sent id=' + (j && j.messageId) + ' to=' + addr + ' ip=' + ip);
       return true;
     } catch (e) {
       console.error('send threw to=' + addr + ': ' + (e && e.message));
