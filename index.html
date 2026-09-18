@@ -241,6 +241,17 @@
   }
   .about-body p{margin:0 0 18px; color:var(--text-2); font-size:16.5px; max-width:60ch;}
   .about-body p:last-child{margin-bottom:0;}
+  .bio-link{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:8px;
+    margin:-4px 0 22px; color:var(--muted);
+    border:1px solid var(--line); background:var(--surface);
+    transition:color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .bio-link svg{width:19px; height:19px; fill:currentColor; display:block;}
+  .bio-link:hover, .bio-link:focus-visible{
+    color:var(--accent); border-color:var(--line-2); background:var(--accent-soft);
+  }
   .about-body strong{color:var(--text); font-weight:500;}
   .pull{
     font-family:var(--serif); font-weight:400; font-style:italic;
@@ -480,6 +491,7 @@
         <div class="about-body">
           <p>Built by Nair is <strong>Jake</strong> and <strong>Carter Nair</strong>, brothers based in Chicago. Two people, both writing code — and between them covering the engineering, the economics, and the conversation you start with.</p>
           <p><strong>Jake</strong> leads the engineering. He holds a bachelor's and a master's degree in accounting from the University of Missouri — an unusual route into writing production code, and one that turns out to be an advantage. He built TeeBox, a golf equipment marketplace, from nothing to a live platform with payment processing and an iOS app, single-handedly. Doing that alone meant learning the parts of shipping software most developers get to hand to someone else: payment compliance and identity verification, App Store review, email deliverability, and incident response at two in the morning when money is moving between strangers.</p>
+          <a class="bio-link" href="https://www.linkedin.com/in/jake-nair-4b970a211/" target="_blank" rel="noopener noreferrer" aria-label="Jake Nair on LinkedIn" title="Jake Nair on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></a>
           <p class="pull">Most software gets built by people who have never had to run the thing afterwards. That changes what you build.</p>
           <p><strong>Carter</strong> writes code alongside Jake and runs business development and client relationships, so he is usually the first person you speak to. He is a senior at North Central College in Naperville finishing a degree in computer science, with experience in cybersecurity and technology consulting. That matters more than it sounds: the person scoping your project builds software himself, so nothing is promised in a first call that has to be walked back later. His job is working out what a project actually needs — and what it is worth — before a line of it gets quoted.</p>
           <p>The accounting training shows up in the work. Before a feature gets built, the first question is what it costs to run and what it earns — which is why clients here tend to get talked out of at least one expensive idea per project.</p>
