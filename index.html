@@ -275,6 +275,7 @@
   .field.invalid input, .field.invalid textarea{border-color:#B3261E;}
   .form-foot{display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:6px;}
   .note{font-size:13.5px; color:var(--muted); margin:18px 0 0;}
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
   .direct{
     margin-top:24px; padding-top:20px; border-top:1px solid var(--line);
     font-size:14.5px; color:var(--text-2);
@@ -522,11 +523,15 @@
           <textarea id="project" name="project" placeholder="What the product does, who it's for, and what's standing in the way right now."></textarea>
           <span class="err">A sentence or two is plenty — just somewhere to start.</span>
         </div>
+        <div class="hp" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
         <div class="form-foot">
           <button class="btn btn-primary" type="submit">Request free consultation</button>
           <span class="note" id="status" role="status" style="margin:0;"></span>
         </div>
-        <p class="note">This opens your email app with the message ready to send, so you keep a copy of what you sent.</p>
+        <p class="note">Goes straight to both of us. We reply within a day.</p>
         <div class="direct">
           <span class="direct-label">Or email directly:</span>
           <div class="direct-rows">
@@ -559,12 +564,19 @@
   var form = document.getElementById('inquiry');
   var status = document.getElementById('status');
   var TO = 'jakenair23@gmail.com';
+  var ENDPOINT = 'https://inquiry-74oc534wga-uc.a.run.app';
 
   function setInvalid(id, bad){
     var el = document.getElementById(id);
     if (el) el.classList.toggle('invalid', !!bad);
   }
   function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function mailtoFallback(subject, body){
+    window.location.href = 'mailto:' + TO
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+  }
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -573,6 +585,7 @@
     var company = document.getElementById('company').value.trim();
     var timeline = document.getElementById('timeline').value;
     var project = document.getElementById('project').value.trim();
+    var website = document.getElementById('website').value;
 
     var bad = false;
     setInvalid('f-name', !name); if(!name) bad = true;
@@ -580,25 +593,34 @@
     setInvalid('f-project', !project); if(!project) bad = true;
     if (bad){ status.textContent = 'Check the highlighted fields.'; return; }
 
-    var subject = 'Free consultation request — ' + name + (company ? ' (' + company + ')' : '');
+    var subject = 'Free consultation request \u2014 ' + name + (company ? ' (' + company + ')' : '');
     var body = [
-      'Name: ' + name,
-      'Email: ' + email,
-      'Company: ' + (company || '—'),
-      'Timeline: ' + timeline,
-      '',
-      'What I’m building:',
-      project,
-      ''
+      'Name: ' + name, 'Email: ' + email, 'Company: ' + (company || '\u2014'),
+      'Timeline: ' + timeline, '', 'What I\u2019m building:', project, ''
     ].join('\n');
 
-    status.textContent = 'Opening your email app…';
-    window.location.href = 'mailto:' + TO
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body);
-    setTimeout(function(){
-      status.textContent = 'If nothing opened, copy the address below and email us directly.';
-    }, 2500);
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    status.textContent = 'Sending\u2026';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name:name, email:email, company:company,
+                            timeline:timeline, project:project, website:website})
+    }).then(function(r){
+      if (!r.ok) throw new Error('http ' + r.status);
+      return r.json();
+    }).then(function(j){
+      if (!j || !j.ok) throw new Error('rejected');
+      form.reset();
+      btn.disabled = false;
+      status.textContent = 'Sent \u2014 we\u2019ll be in touch within a day to set up your free consultation.';
+    }).catch(function(){
+      btn.disabled = false;
+      status.textContent = 'Couldn\u2019t send that \u2014 opening your email app instead.';
+      mailtoFallback(subject, body);
+    });
   });
 
   Array.prototype.forEach.call(document.querySelectorAll('.copy'), function(btn){
