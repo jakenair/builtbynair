@@ -164,6 +164,33 @@
     background:var(--surface); border:1px solid var(--line);
     border-radius:4px; overflow:hidden;
   }
+  .case-head{display:flex; align-items:center; gap:16px; margin-bottom:18px;}
+  .case-logo{width:58px; height:58px; border-radius:13px; flex:none; display:block;}
+  .case-headtext{min-width:0;}
+  /* Product shots — desktop capture with the iOS app overlapping it. Real
+     screenshots of the live product, not mockups. */
+  .shots{
+    display:block; position:relative; margin:0 34px 30px; padding:26px 26px 0;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:6px;
+    overflow:hidden; text-decoration:none;
+  }
+  .shot-web{
+    display:block; width:100%; height:auto; border-radius:5px 5px 0 0;
+    box-shadow:0 18px 40px rgba(0,0,0,.18);
+  }
+  .shot-ios{
+    position:absolute; right:34px; bottom:0; width:20%; max-width:140px; height:auto;
+    border-radius:13px 13px 0 0; box-shadow:0 16px 36px rgba(0,0,0,.30);
+  }
+  .shots:hover{border-color:var(--line-2);}
+  .case-cta{padding:0 34px 32px;}
+  @media (max-width:560px){
+    .case-head{gap:13px; margin-bottom:15px;}
+    .case-logo{width:48px; height:48px; border-radius:11px;}
+    .shots{margin:0 20px 22px; padding:15px 15px 0;}
+    .shot-ios{right:18px; width:26%;}
+    .case-cta{padding:0 20px 24px;}
+  }
   .case-top{padding:34px 34px 30px;}
   @media (max-width:560px){ .case-top{padding:24px 20px 22px;} }
   .case-name{
@@ -200,7 +227,15 @@
     border-radius:3px; overflow:hidden;
     display:flex; align-items:center; justify-content:center;
   }
-  .portrait img{width:100%; height:100%; object-fit:cover; display:block;}
+  .portrait img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:grayscale(100%); transition:filter .5s ease, transform .5s ease;
+  }
+  .portrait:hover img, .portrait:focus-within img{ filter:grayscale(0); }
+  @media (prefers-reduced-motion:reduce){ .portrait img{transition:none;} }
+  /* Touch devices have no hover — show the photos in colour there instead of
+     leaving them permanently desaturated. */
+  @media (hover:none){ .portrait img{filter:grayscale(0);} }
   .portrait .ph{
     font-family:var(--mono); font-size:11px; letter-spacing:.07em;
     text-transform:uppercase; color:var(--muted); text-align:center; padding:16px;
@@ -384,10 +419,19 @@
       </div>
       <article class="case">
         <div class="case-top">
-          <h3 class="case-name">TeeBox</h3>
-          <a class="case-url" href="https://teeboxmarket.com" target="_blank" rel="noopener">teeboxmarket.com</a>
-          <p class="case-desc">A peer-to-peer marketplace where golfers buy and sell used equipment. Designed, built, launched and operated in-house — every layer, from the listing page to the seller payout.</p>
+          <div class="case-head">
+            <img class="case-logo" src="/assets/teebox-logo.png" alt="TeeBox app icon" width="256" height="256" decoding="async">
+            <div class="case-headtext">
+              <h3 class="case-name">TeeBox</h3>
+              <a class="case-url" href="https://teeboxmarket.com" target="_blank" rel="noopener">teeboxmarket.com &#8599;</a>
+            </div>
+          </div>
+          <p class="case-desc">A peer-to-peer marketplace where golfers buy and sell used equipment. Designed, built, launched and operated in-house &mdash; every layer, from the listing page to the seller payout.</p>
         </div>
+        <a class="shots" href="https://teeboxmarket.com" target="_blank" rel="noopener" aria-label="Open teeboxmarket.com in a new tab">
+          <img class="shot-web" src="/assets/teebox-web.webp" alt="The TeeBox marketplace in a desktop browser" width="1400" height="875" loading="lazy" decoding="async">
+          <img class="shot-ios" src="/assets/teebox-ios.webp" alt="The TeeBox iOS app" width="460" height="995" loading="lazy" decoding="async">
+        </a>
         <dl class="spec">
           <div><dt>Role</dt><dd>Product, design, engineering, infrastructure and day-to-day operations</dd></div>
           <div><dt>Web</dt><dd>Storefront and listing flow, statically hosted behind a CDN</dd></div>
@@ -396,6 +440,9 @@
           <div><dt>Backend</dt><dd>Firestore data model, Cloud Functions for business logic, security rules, authenticated transactional email</dd></div>
           <div><dt>Status</dt><dd>Live and in active development</dd></div>
         </dl>
+        <div class="case-cta">
+          <a class="btn btn-primary" href="https://teeboxmarket.com" target="_blank" rel="noopener">Visit teeboxmarket.com &rarr;</a>
+        </div>
       </article>
     </div>
   </section>
@@ -410,13 +457,13 @@
           <div class="portraits">
             <div>
               <figure class="portrait" style="margin:0;">
-                <div class="ph">Portrait<br>to be added</div>
+                <img src="/assets/jake.webp" alt="Jake Nair" width="600" height="750" loading="lazy" decoding="async">
               </figure>
               <div class="portrait-cap">Jake Nair — Founder</div>
             </div>
             <div>
               <figure class="portrait" style="margin:0;">
-                <div class="ph">Portrait<br>to be added</div>
+                <img src="/assets/carter.webp" alt="Carter Nair" width="600" height="750" loading="lazy" decoding="async">
               </figure>
               <div class="portrait-cap">Carter Nair — Founder</div>
             </div>
@@ -426,9 +473,7 @@
           <p>Built by Nair is <strong>Jake</strong> and <strong>Carter Nair</strong>, brothers based in Chicago. Two people: one who builds the software, one who works out what it needs to do.</p>
           <p><strong>Jake</strong> writes the code. He holds a bachelor's and a master's degree in accounting from the University of Missouri — an unusual route into writing production code, and one that turns out to be an advantage. He built TeeBox, a golf equipment marketplace, from nothing to a live platform with payment processing and an iOS app, single-handedly. Doing that alone meant learning the parts of shipping software most developers get to hand to someone else: payment compliance and identity verification, App Store review, email deliverability, and incident response at two in the morning when money is moving between strangers.</p>
           <p class="pull">Most software gets built by people who have never had to run the thing afterwards. That changes what you build.</p>
-          <!-- TODO: add Carter's background here — school, prior roles, industries sold into.
-               Keep it specific and verifiable; a vague line reads worse than a short one. -->
-          <p><strong>Carter</strong> handles business development and client relationships, and is usually the first person you speak to. His job is working out what a project actually needs — and what it is worth — before a line of it gets scoped or quoted, which is the step that decides whether everything after it goes well.</p>
+          <p><strong>Carter</strong> handles business development and client relationships, and is usually the first person you speak to. He is a senior at North Central College in Naperville finishing a degree in computer science, with experience in cybersecurity and technology consulting. That matters more than it sounds: the person scoping your project can read the architecture, so nothing is promised in a first call that has to be walked back later. His job is working out what a project actually needs — and what it is worth — before a line of it gets quoted.</p>
           <p>The accounting training shows up in the work. Before a feature gets built, the first question is what it costs to run and what it earns — which is why clients here tend to get talked out of at least one expensive idea per project.</p>
           <p>We take on a small number of client builds at a time. What's for sale is attention, not a team's spare capacity.</p>
         </div>
