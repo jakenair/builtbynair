@@ -30,7 +30,7 @@
 <title>Built by Nair</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Pinyon+Script&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap">
 <style>
   :root{
     --bg:#F4F5F6; --surface:#FFFFFF; --surface-2:#EAECEF;
@@ -40,6 +40,7 @@
     --serif:'Newsreader', Georgia, 'Times New Roman', serif;
     --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --script:'Pinyon Script', 'Snell Roundhand', 'Apple Chancery', cursive;
     --maxw:1080px;
     --measure:63ch;
   }
@@ -87,14 +88,20 @@
   .mark{
     font-family:var(--serif); font-weight:500; font-size:21px;
     letter-spacing:-0.012em; color:var(--text); text-decoration:none;
-    white-space:nowrap;
+    white-space:nowrap; line-height:1.15; display:inline-flex; align-items:baseline; gap:.22em;
   }
+  .mark .n, .foot-mark .n{
+    font-family:var(--script); font-weight:400; color:var(--accent);
+    letter-spacing:0; line-height:1;
+  }
+  .mark .n{font-size:1.58em;}
+  .foot-mark .n{font-size:1.5em;}
   nav.links{display:flex; gap:26px;}
   nav.links a{
     font-size:14px; color:var(--text-2); text-decoration:none;
     font-weight:450; transition:color .15s;
   }
-  nav.links a:hover{color:var(--text);}
+  nav.links a:hover{color:var(--accent);}
   @media (max-width:720px){ nav.links{display:none;} }
 
   /* ---------------- hero ---------------- */
@@ -351,7 +358,7 @@
 <body>
 <header class="site">
   <div class="wrap bar">
-    <a class="mark" href="#top">Built by Nair</a>
+    <a class="mark" href="#top">Built by<span class="n">Nair</span></a>
     <nav class="links">
       <a href="#services">Services</a>
       <a href="#approach">Approach</a>
@@ -588,7 +595,7 @@
 
 <div class="wrap">
   <footer class="site">
-    <span class="foot-mark">Built by Nair</span>
+    <span class="foot-mark">Built by <span class="n">Nair</span></span>
     <span>Chicago, Illinois</span>
     <span><a href="mailto:jakenair23@gmail.com">jakenair23@gmail.com</a></span>
   </footer>
