@@ -138,6 +138,12 @@
     font-size:clamp(27px, 3.6vw, 38px); letter-spacing:-0.018em;
     line-height:1.14; margin:0 0 12px; text-wrap:balance;
   }
+  .badge{
+    display:inline-block; margin:0 0 14px; padding:5px 12px;
+    background:var(--accent-soft); color:var(--accent-ink);
+    border-radius:999px; font-size:12.5px; font-weight:600;
+    letter-spacing:.06em; text-transform:uppercase;
+  }
   .sec-head{margin-bottom:46px; max-width:var(--measure);}
   .sec-head p{color:var(--text-2); margin:0; font-size:16.5px;}
 
@@ -332,7 +338,7 @@
     <h1>We build software products <i>end to end</i> — and operate our own.</h1>
     <p class="lede">We build and run our own software products, and take on a small number of client builds alongside them. Not a piece of your product: the interface, the backend, the payments, the app in the App Store, and the deploy that puts it in front of real customers.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="#contact">Start a project</a>
+      <a class="btn btn-primary" href="#contact">Book a free consultation</a>
       <a class="btn btn-ghost" href="#work">See the work</a>
     </div>
     <div class="manifest">
@@ -478,8 +484,9 @@
   <section id="contact" class="band">
     <div class="wrap">
       <div class="sec-head">
+        <span class="badge">Free consultation</span>
         <h2>Start a project</h2>
-        <p>Tell us what you're building. You'll get a reply within a day with an honest read on whether this is the right fit — including when it isn't.</p>
+        <p>Tell us what you're building and we'll set up a free consultation — a call to talk through what you need and what we could do about it. No cost, and nothing owed afterwards. You'll get a reply within a day with an honest read on whether this is the right fit, including when it isn't.</p>
       </div>
       <form id="inquiry" novalidate>
         <div class="row2">
@@ -516,7 +523,7 @@
           <span class="err">A sentence or two is plenty — just somewhere to start.</span>
         </div>
         <div class="form-foot">
-          <button class="btn btn-primary" type="submit">Send inquiry</button>
+          <button class="btn btn-primary" type="submit">Request free consultation</button>
           <span class="note" id="status" role="status" style="margin:0;"></span>
         </div>
         <p class="note">This opens your email app with the message ready to send, so you keep a copy of what you sent.</p>
@@ -573,7 +580,7 @@
     setInvalid('f-project', !project); if(!project) bad = true;
     if (bad){ status.textContent = 'Check the highlighted fields.'; return; }
 
-    var subject = 'Project inquiry — ' + name + (company ? ' (' + company + ')' : '');
+    var subject = 'Free consultation request — ' + name + (company ? ' (' + company + ')' : '');
     var body = [
       'Name: ' + name,
       'Email: ' + email,
