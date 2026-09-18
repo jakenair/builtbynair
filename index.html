@@ -167,28 +167,10 @@
   .case-head{display:flex; align-items:center; gap:16px; margin-bottom:18px;}
   .case-logo{width:58px; height:58px; border-radius:13px; flex:none; display:block;}
   .case-headtext{min-width:0;}
-  /* Product shots — desktop capture with the iOS app overlapping it. Real
-     screenshots of the live product, not mockups. */
-  .shots{
-    display:block; position:relative; margin:0 34px 30px; padding:26px 26px 0;
-    background:var(--surface-2); border:1px solid var(--line); border-radius:6px;
-    overflow:hidden; text-decoration:none;
-  }
-  .shot-web{
-    display:block; width:100%; height:auto; border-radius:5px 5px 0 0;
-    box-shadow:0 18px 40px rgba(0,0,0,.18);
-  }
-  .shot-ios{
-    position:absolute; right:34px; bottom:0; width:20%; max-width:140px; height:auto;
-    border-radius:13px 13px 0 0; box-shadow:0 16px 36px rgba(0,0,0,.30);
-  }
-  .shots:hover{border-color:var(--line-2);}
   .case-cta{padding:0 34px 32px;}
   @media (max-width:560px){
     .case-head{gap:13px; margin-bottom:15px;}
     .case-logo{width:48px; height:48px; border-radius:11px;}
-    .shots{margin:0 20px 22px; padding:15px 15px 0;}
-    .shot-ios{right:18px; width:26%;}
     .case-cta{padding:0 20px 24px;}
   }
   .case-top{padding:34px 34px 30px;}
@@ -428,10 +410,6 @@
           </div>
           <p class="case-desc">A peer-to-peer marketplace where golfers buy and sell used equipment. Designed, built, launched and operated in-house &mdash; every layer, from the listing page to the seller payout.</p>
         </div>
-        <a class="shots" href="https://teeboxmarket.com" target="_blank" rel="noopener" aria-label="Open teeboxmarket.com in a new tab">
-          <img class="shot-web" src="/assets/teebox-web.webp" alt="The TeeBox marketplace in a desktop browser" width="1400" height="875" loading="lazy" decoding="async">
-          <img class="shot-ios" src="/assets/teebox-ios.webp" alt="The TeeBox iOS app" width="460" height="995" loading="lazy" decoding="async">
-        </a>
         <dl class="spec">
           <div><dt>Role</dt><dd>Product, design, engineering, infrastructure and day-to-day operations</dd></div>
           <div><dt>Web</dt><dd>Storefront and listing flow, statically hosted behind a CDN</dd></div>
