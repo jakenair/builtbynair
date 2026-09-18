@@ -274,6 +274,10 @@
     font-size:14.5px; color:var(--text-2);
     display:flex; flex-wrap:wrap; align-items:center; gap:10px;
   }
+  .direct{align-items:flex-start;}
+  .direct-label{padding-top:5px;}
+  .direct-rows{display:flex; flex-direction:column; gap:8px;}
+  .direct-row{display:flex; align-items:center; gap:10px;}
   .direct code{
     font-family:var(--mono); font-size:13px; color:var(--text);
     background:var(--surface-2); padding:4px 8px; border-radius:3px;
@@ -505,9 +509,17 @@
         </div>
         <p class="note">This opens your email app with the message ready to send, so you keep a copy of what you sent.</p>
         <div class="direct">
-          <span>Or email directly:</span>
-          <code id="addr">jakenair23@gmail.com</code>
-          <button class="copy" type="button" id="copyBtn">Copy</button>
+          <span class="direct-label">Or email directly:</span>
+          <div class="direct-rows">
+            <div class="direct-row">
+              <code class="addr">carternair@yahoo.com</code>
+              <button class="copy" type="button" data-copy="carternair@yahoo.com">Copy</button>
+            </div>
+            <div class="direct-row">
+              <code class="addr" id="addr">jakenair23@gmail.com</code>
+              <button class="copy" type="button" data-copy="jakenair23@gmail.com">Copy</button>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -570,22 +582,40 @@
     }, 2500);
   });
 
-  document.getElementById('copyBtn').addEventListener('click', function(){
-    var btn = this;
-    var done = function(ok){
-      btn.textContent = ok ? 'Copied' : 'Select it';
-      setTimeout(function(){ btn.textContent = 'Copy'; }, 1800);
-    };
-    try{
-      navigator.clipboard.writeText(TO).then(function(){ done(true); }, function(){ done(false); });
-    }catch(err){
-      done(false);
+  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function(btn){
+    btn.addEventListener('click', function(){
+      var value = btn.getAttribute('data-copy');
+      var done = function(ok){
+        btn.textContent = ok ? 'Copied' : 'Select it';
+        setTimeout(function(){ btn.textContent = 'Copy'; }, 1800);
+      };
+      // Fallback chain: async clipboard API -> execCommand -> select the text
+      // so "Select it" actually selects something the visitor can copy.
+      var selectIt = function(){
+        try{
+          var code = btn.parentNode.querySelector('.addr');
+          var r = document.createRange(); r.selectNodeContents(code);
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        }catch(e2){}
+        done(false);
+      };
+      var legacy = function(){
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = value; ta.setAttribute('readonly','');
+          ta.style.position='absolute'; ta.style.left='-9999px';
+          document.body.appendChild(ta); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          ok ? done(true) : selectIt();
+        }catch(e3){ selectIt(); }
+      };
       try{
-        var r = document.createRange();
-        r.selectNodeContents(document.getElementById('addr'));
-        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      }catch(e2){}
-    }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(value).then(function(){ done(true); }, legacy);
+        } else { legacy(); }
+      }catch(err){ legacy(); }
+    });
   });
 })();
 </script>
